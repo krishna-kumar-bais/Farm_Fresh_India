@@ -1,0 +1,134 @@
+{% extends 'base/base.html' %}
+
+{% block title %}About Us - Farm Fresh India{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-5">
+        <div class="col-lg-6 mb-4 mb-lg-0">
+            <h1 class="mb-4">About Farm Fresh India</h1>
+            <p class="lead">Connecting farmers directly to consumers, bringing farm-fresh produce to your doorstep.</p>
+            <p>Farm Fresh India was founded with a simple mission: to create a sustainable ecosystem that benefits both farmers and consumers. We believe in fair prices for producers and quality products for customers.</p>
+            <p>Our platform eliminates middlemen, ensuring farmers receive appropriate compensation for their hard work while providing consumers with fresh, high-quality agricultural products at reasonable prices.</p>
+            <h4 class="mt-4 mb-3">Our Mission</h4>
+            <ul class="list-unstyled">
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Support local farmers by providing a direct market for their produce</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Deliver the freshest agricultural products to consumers</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Promote sustainable and organic farming practices</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Ensure transparency in pricing and product origin</li>
+                <li class="mb-2"><i class="fas fa-check-circle text-success me-2"></i> Reduce food waste through efficient supply chain management</li>
+            </ul>
+        </div>
+        <div class="col-lg-6">
+            <img src="https://images.unsplash.com/photo-1594062436177-5f0a13566900?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" class="img-fluid rounded shadow" alt="Indian Farm">
+        </div>
+    </div>
+
+    <div class="row mt-5 mb-4">
+        <div class="col-12 text-center">
+            <h2>Our Journey</h2>
+            <p class="lead">From a small local initiative to a nationwide movement</p>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-primary">2018</h1>
+                    <h5>The Beginning</h5>
+                    <p>Started with 5 farmers and local deliveries in Delhi</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-primary">2020</h1>
+                    <h5>Expansion</h5>
+                    <p>Expanded to 50+ farmers and 3 major cities</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-primary">2022</h1>
+                    <h5>Going Digital</h5>
+                    <p>Launched our e-commerce platform and mobile app</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 text-center">
+                <div class="card-body">
+                    <h1 class="display-4 text-primary">2023</h1>
+                    <h5>Today</h5>
+                    <p>200+ farmers, nationwide delivery, and growing community</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="card bg-light border-0">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-6 mb-4 mb-md-0">
+                            <h3>Why Choose Us?</h3>
+                            <div class="mb-3">
+                                <h5><i class="fas fa-leaf text-success me-2"></i> Freshness Guaranteed</h5>
+                                <p class="mb-3">Products are harvested and delivered within 24-48 hours</p>
+                                
+                                <h5><i class="fas fa-award text-success me-2"></i> Quality Assurance</h5>
+                                <p class="mb-3">Rigorous quality checks before products reach you</p>
+                                
+                                <h5><i class="fas fa-handshake text-success me-2"></i> Fair Trade</h5>
+                                <p class="mb-3">Farmers receive fair compensation for their produce</p>
+                                
+                                <h5><i class="fas fa-truck text-success me-2"></i> Reliable Delivery</h5>
+                                <p>Timely delivery to your doorstep with care</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <img src="https://images.unsplash.com/photo-1620706857370-e1b9770e8bb1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1064&q=80" class="img-fluid rounded" alt="Vegetables and Fruits">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Meet Our Farmers Section -->
+    <div class="row mt-5">
+        <div class="col-12 text-center mb-4">
+            <h2>Meet Our Farmers</h2>
+            <p class="lead">The dedicated individuals behind your fresh produce</p>
+        </div>
+    </div>
+
+    <div class="row">
+        {% for farmer in farmers %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 farmer-card">
+                <div class="card-body">
+                    {% if farmer.image %}
+                    <img src="{{ farmer.image.url }}" class="farmer-image" alt="{{ farmer.name }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/150.png?text=Farmer" class="farmer-image" alt="{{ farmer.name }}">
+                    {% endif %}
+                    <h5>{{ farmer.name }}</h5>
+                    <p class="text-muted">{{ farmer.location }}</p>
+                    <p>{{ farmer.description }}</p>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center">
+            <p>Our farmer profiles are coming soon. Check back later!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 

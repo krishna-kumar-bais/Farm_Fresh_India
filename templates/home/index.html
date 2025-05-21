@@ -1,0 +1,227 @@
+{% extends 'base/base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Farm Fresh India - Fresh Agricultural Products" %}{% endblock %}
+
+{% block content %}
+<div class="container-fluid p-0">
+    <!-- Main Banner -->
+    <div class="banner">
+        <img src="https://images.unsplash.com/photo-1464226184884-fa280b87c399?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80" alt="{% trans 'Indian Farmers' %}">
+        <div class="banner-content">
+            <h1>{% trans "Welcome to Farm Fresh India" %}</h1>
+            <p class="lead">{% trans "Fresh produce direct from farms to your home" %}</p>
+            <div class="mt-4">
+                <a href="{% url 'category_list' 'normal' %}" class="btn btn-primary me-2 mb-2">{% trans "Shop Normal Products" %}</a>
+                <a href="{% url 'category_list' 'organic' %}" class="btn btn-secondary mb-2">{% trans "Shop Organic Products" %}</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container mt-5">
+    <!-- Main Categories -->
+    <h2 class="text-center mb-4">{% trans "Our Products" %}</h2>
+    <div class="row justify-content-center">
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 category-main-card">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-seedling category-icon"></i>
+                    </div>
+                    <h3>{% trans "Normal Products" %}</h3>
+                    <p>{% trans "Affordable, farm-fresh produce cultivated using traditional agricultural methods." %}</p>
+                    <a href="{% url 'category_list' 'normal' %}" class="btn btn-primary">{% trans "Browse Normal Products" %}</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5 mb-4">
+            <div class="card h-100 category-main-card">
+                <div class="card-body text-center p-4">
+                    <div class="mb-3">
+                        <i class="fas fa-leaf category-icon"></i>
+                    </div>
+                    <h3>{% trans "Organic Products" %}</h3>
+                    <p>{% trans "Premium, certified organic produce grown without chemicals or pesticides." %}</p>
+                    <a href="{% url 'category_list' 'organic' %}" class="btn btn-secondary">{% trans "Browse Organic Products" %}</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sub Categories -->
+    <h3 class="text-center my-5">{% trans "Shop by Category" %}</h3>
+    <div class="row">
+        <!-- Normal Categories -->
+        <div class="col-lg-6">
+            <h4 class="mb-3">{% trans "Normal Products" %}</h4>
+            <div class="row">
+                {% for category in normal_categories %}
+                <div class="col-md-6 mb-4">
+                    <a href="{% url 'category_detail' category.slug %}" class="text-decoration-none">
+                        <div class="category-card">
+                            {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x200.png?text={{ category.get_sub_category_display }}" alt="{{ category.get_sub_category_display }}">
+                            {% endif %}
+                            <div class="category-overlay">
+                                <h4>{{ category.get_sub_category_display }}</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- Organic Categories -->
+        <div class="col-lg-6">
+            <h4 class="mb-3">{% trans "Organic Products" %}</h4>
+            <div class="row">
+                {% for category in organic_categories %}
+                <div class="col-md-6 mb-4">
+                    <a href="{% url 'category_detail' category.slug %}" class="text-decoration-none">
+                        <div class="category-card">
+                            {% if category.image %}
+                            <img src="{{ category.image.url }}" alt="{{ category.name }}">
+                            {% else %}
+                            <img src="https://via.placeholder.com/300x200.png?text=Organic+{{ category.get_sub_category_display }}" alt="Organic {{ category.get_sub_category_display }}">
+                            {% endif %}
+                            <div class="category-overlay">
+                                <h4>{{ category.get_sub_category_display }}</h4>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Featured Products -->
+    {% if featured_products %}
+    <h3 class="text-center my-5">{% trans "Featured Products" %}</h3>
+    <div class="row">
+        {% for product in featured_products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x200.png?text={{ product.name }}" class="card-img-top" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="price">₹{{ product.price }} {% trans "per" %} {{ product.unit }}</p>
+                    <form method="post" action="{% url 'cart_add' product.id %}" class="add-to-cart-form">
+                        {% csrf_token %}
+                        <div class="row g-2 mb-3">
+                            <div class="col-7">
+                                <input type="number" name="quantity" min="1" value="1" class="form-control">
+                            </div>
+                            <div class="col-5 text-end">
+                                <span class="text-secondary">{% trans "Available" %}: {{ product.stock }}</span>
+                            </div>
+                        </div>
+                        <input type="hidden" name="override" value="False">
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-primary">{% trans "Add to Cart" %}</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="card-footer bg-transparent border-top-0">
+                    <a href="{{ product.get_absolute_url }}" class="btn btn-sm btn-outline-secondary w-100">{% trans "View Details" %}</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Meet the Farmers -->
+    {% if farmers %}
+    <h3 class="text-center my-5">{% trans "Meet Our Farmers" %}</h3>
+    <div class="row">
+        {% for farmer in farmers %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 farmer-card">
+                <div class="card-body">
+                    {% if farmer.image %}
+                    <img src="{{ farmer.image.url }}" class="farmer-image" alt="{{ farmer.name }}">
+                    {% else %}
+                    <img src="https://via.placeholder.com/150.png?text=Farmer" class="farmer-image" alt="{{ farmer.name }}">
+                    {% endif %}
+                    <h5>{{ farmer.name }}</h5>
+                    <p class="text-muted">{{ farmer.location }}</p>
+                    <p class="small">{{ farmer.description|truncatechars:100 }}</p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="text-center mt-3">
+        <a href="{% url 'about' %}" class="btn btn-outline-primary">{% trans "Learn More About Our Farmers" %}</a>
+    </div>
+    {% endif %}
+
+    <!-- Features -->
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="card border-0 bg-light">
+                <div class="card-body py-5">
+                    <div class="row text-center">
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="mb-3">
+                                <i class="fas fa-truck text-primary" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5>{% trans "Fast Delivery" %}</h5>
+                            <p class="small">{% trans "Delivery within 24 hours in select cities" %}</p>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="mb-3">
+                                <i class="fas fa-certificate text-primary" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5>{% trans "Quality Assurance" %}</h5>
+                            <p class="small">{% trans "All products are verified for quality" %}</p>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="mb-3">
+                                <i class="fas fa-rupee-sign text-primary" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5>{% trans "Secure Payments" %}</h5>
+                            <p class="small">{% trans "Multiple payment options including UPI, cards, and COD" %}</p>
+                        </div>
+                        <div class="col-md-3 mb-4 mb-md-0">
+                            <div class="mb-3">
+                                <i class="fas fa-undo text-primary" style="font-size: 2.5rem;"></i>
+                            </div>
+                            <h5>{% trans "Easy Returns" %}</h5>
+                            <p class="small">{% trans "Not satisfied? Return within 24 hours" %}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Code Checker -->
+    <div class="row mt-5 mb-4">
+        <div class="col-md-8 mx-auto">
+            <div class="card border-primary">
+                <div class="card-body p-4 text-center">
+                    <h4 class="mb-4">{% trans "Check Delivery Availability in Your Area" %}</h4>
+                    <div class="row justify-content-center">
+                        <div class="col-md-6">
+                            <div class="input-group">
+                                <input type="text" class="form-control" placeholder="{% trans 'Enter PIN Code' %}" aria-label="PIN Code">
+                                <button class="btn btn-primary" type="button">{% trans "Check" %}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

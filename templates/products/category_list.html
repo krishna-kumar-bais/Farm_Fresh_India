@@ -1,0 +1,94 @@
+{% extends 'base/base.html' %}
+
+{% block title %}
+{% if category_type == 'normal' %}Normal{% elif category_type == 'organic' %}Organic{% endif %} Products - Farm Fresh India
+{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row mb-4">
+        <div class="col-12">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% if category_type == 'normal' %}Normal{% elif category_type == 'organic' %}Organic{% endif %} Products</li>
+                </ol>
+            </nav>
+            
+            <h1 class="mb-4">{% if category_type == 'normal' %}Normal{% elif category_type == 'organic' %}Organic{% endif %} Products</h1>
+            
+            {% if category_type == 'normal' %}
+                <p class="lead">Fresh farm products cultivated using traditional agricultural methods.</p>
+            {% elif category_type == 'organic' %}
+                <p class="lead">Premium organic products grown without synthetic pesticides or chemicals.</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="row">
+        {% for category in categories %}
+            <div class="col-md-4 mb-4">
+                <a href="{% url 'category_detail' category.slug %}" class="text-decoration-none text-dark">
+                    <div class="card h-100">
+                        {% if category.image %}
+                            <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+                        {% else %}
+                            <img src="https://via.placeholder.com/600x400.png?text={{ category.get_sub_category_display }}" class="card-img-top" alt="{{ category.get_sub_category_display }}">
+                        {% endif %}
+                        <div class="card-body text-center">
+                            <h4 class="card-title">{{ category.get_sub_category_display }}</h4>
+                            <p class="card-text">{{ category.description|truncatechars:100 }}</p>
+                            <div class="d-grid">
+                                <button class="btn btn-primary">Browse {{ category.get_sub_category_display }}</button>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        {% empty %}
+            <div class="col-12 text-center">
+                <p>No categories found.</p>
+            </div>
+        {% endfor %}
+    </div>
+    
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-light">
+                <div class="card-body p-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8">
+                            <h4>Why Choose Our {% if category_type == 'normal' %}Normal{% elif category_type == 'organic' %}Organic{% endif %} Products?</h4>
+                            
+                            {% if category_type == 'normal' %}
+                                <p>Our normal products are cultivated using traditional farming methods that have been perfected over generations. We ensure that all produce is fresh, high quality, and delivered to you at affordable prices.</p>
+                                <ul class="mb-0">
+                                    <li>Cultivated by experienced farmers</li>
+                                    <li>Freshly harvested and immediately delivered</li>
+                                    <li>Affordable pricing for everyday consumption</li>
+                                    <li>Quality checked for taste and freshness</li>
+                                </ul>
+                            {% elif category_type == 'organic' %}
+                                <p>Our organic products are grown without synthetic pesticides, fertilizers or genetically modified organisms. We follow strict organic farming practices to ensure pure, chemical-free produce.</p>
+                                <ul class="mb-0">
+                                    <li>100% chemical and pesticide free</li>
+                                    <li>Grown using natural farming methods</li>
+                                    <li>Rich in nutrients and natural flavor</li>
+                                    <li>Environmentally sustainable cultivation</li>
+                                </ul>
+                            {% endif %}
+                        </div>
+                        <div class="col-md-4 mt-3 mt-md-0 text-center">
+                            {% if category_type == 'normal' %}
+                                <i class="fas fa-seedling" style="font-size: 6rem; color: var(--primary-color);"></i>
+                            {% elif category_type == 'organic' %}
+                                <i class="fas fa-leaf" style="font-size: 6rem; color: var(--primary-color);"></i>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

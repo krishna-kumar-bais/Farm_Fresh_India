@@ -1,0 +1,68 @@
+{% extends 'base/base.html' %}
+
+{% block title %}My Orders - Farm Fresh India{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">My Orders</h1>
+    
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Your Order History</h4>
+        </div>
+        <div class="card-body">
+            {% if orders %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th class="text-end">Total</th>
+                                <th class="text-center">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for order in orders %}
+                            <tr>
+                                <td>#{{ order.id }}</td>
+                                <td>{{ order.created|date:"d M, Y" }}</td>
+                                <td>
+                                    {% if order.status == 'pending' %}
+                                    <span class="badge bg-warning">Pending</span>
+                                    {% elif order.status == 'processing' %}
+                                    <span class="badge bg-info">Processing</span>
+                                    {% elif order.status == 'shipped' %}
+                                    <span class="badge bg-primary">Shipped</span>
+                                    {% elif order.status == 'delivered' %}
+                                    <span class="badge bg-success">Delivered</span>
+                                    {% else %}
+                                    <span class="badge bg-secondary">{{ order.status }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">₹{{ order.total_paid }}</td>
+                                <td class="text-center">
+                                    <a href="{% url 'order_detail' order.id %}" class="btn btn-sm btn-outline-primary">
+                                        <i class="fas fa-eye"></i> View Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="text-center py-5">
+                    <i class="fas fa-shopping-bag fa-4x text-muted mb-3"></i>
+                    <h3>You haven't placed any orders yet</h3>
+                    <p class="lead">Start shopping and your order history will appear here.</p>
+                    <a href="{% url 'home' %}" class="btn btn-success btn-lg mt-3">
+                        <i class="fas fa-store me-2"></i>Browse Products
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %} 

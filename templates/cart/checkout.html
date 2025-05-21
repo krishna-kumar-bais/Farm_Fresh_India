@@ -1,0 +1,150 @@
+{% extends 'base/base.html' %}
+
+{% block title %}Checkout - Farm Fresh India{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <h1 class="mb-4">Checkout</h1>
+    
+    <div class="row">
+        <div class="col-lg-8 mb-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Shipping Information</h5>
+                </div>
+                <div class="card-body">
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="id_full_name" class="form-label">Full Name</label>
+                                {{ form.full_name }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_email" class="form-label">Email</label>
+                                {{ form.email }}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="id_phone" class="form-label">Phone Number</label>
+                                {{ form.phone }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_pin_code" class="form-label">PIN Code</label>
+                                {{ form.pin_code }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="id_address" class="form-label">Address</label>
+                            {{ form.address }}
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6 mb-3 mb-md-0">
+                                <label for="id_city" class="form-label">City</label>
+                                {{ form.city }}
+                            </div>
+                            <div class="col-md-6">
+                                <label for="id_state" class="form-label">State</label>
+                                {{ form.state }}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label d-block">Payment Method</label>
+                            <div class="d-flex flex-wrap gap-4">
+                                {% for radio in form.payment_method %}
+                                <div class="form-check">
+                                    {{ radio.tag }}
+                                    <label class="form-check-label" for="{{ radio.id_for_label }}">
+                                        {% if radio.choice_value == 'upi' %}
+                                            <i class="fas fa-mobile-alt me-1"></i>
+                                        {% elif radio.choice_value == 'card' %}
+                                            <i class="fas fa-credit-card me-1"></i>
+                                        {% elif radio.choice_value == 'cod' %}
+                                            <i class="fas fa-money-bill-wave me-1"></i>
+                                        {% endif %}
+                                        {{ radio.choice_label }}
+                                    </label>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        
+                        <div class="d-grid">
+                            <button type="submit" class="btn btn-success btn-lg">Place Order</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Order Summary</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-borderless">
+                            <tbody>
+                                {% for item in cart %}
+                                <tr>
+                                    <td class="w-50">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2">{{ item.quantity }}x</span>
+                                            <span>{{ item.product.name }}</span>
+                                        </div>
+                                    </td>
+                                    <td class="text-end">₹{{ item.total_price }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Subtotal</span>
+                        <span>₹{{ cart.get_total_price }}</span>
+                    </div>
+                    
+                    <div class="d-flex justify-content-between mb-2">
+                        <span>Shipping</span>
+                        {% if cart.get_total_price >= 500 %}
+                            <span class="text-success">Free</span>
+                        {% else %}
+                            <span>₹50</span>
+                        {% endif %}
+                    </div>
+                    
+                    <hr>
+                    
+                    <div class="d-flex justify-content-between mb-0">
+                        <strong>Total</strong>
+                        <strong>
+                            {% if cart.get_total_price >= 500 %}
+                                ₹{{ cart.get_total_price }}
+                            {% else %}
+                                ₹{{ cart.get_total_price|add:50 }}
+                            {% endif %}
+                        </strong>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-shield-alt me-2"></i> Secure Checkout</h5>
+                    <p class="small mb-0">All payments are processed through secure payment gateways. Your personal information is encrypted and secure.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %} 

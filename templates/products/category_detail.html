@@ -1,0 +1,64 @@
+{% extends 'base/base.html' %}
+
+{% block title %}{{ category.name }} - Farm Fresh India{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'home' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'category_list' category.category_type %}">{{ category.get_category_type_display }} Products</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ category.get_sub_category_display }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <h1 class="mb-3">{{ category.get_sub_category_display }}</h1>
+            <p class="lead">{{ category.description }}</p>
+        </div>
+        {% if category.image %}
+        <div class="col-md-4 text-center">
+            <img src="{{ category.image.url }}" alt="{{ category.name }}" class="img-fluid rounded" style="max-height: 200px;">
+        </div>
+        {% endif %}
+    </div>
+    
+    <div class="row mb-5">
+        {% for product in products %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" class="card-img-top product-image" alt="{{ product.name }}">
+                {% else %}
+                <img src="https://via.placeholder.com/300x300.png?text={{ product.name }}" class="card-img-top product-image" alt="{{ product.name }}">
+                {% endif %}
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ product.name }}</h5>
+                    <p class="card-text flex-grow-1">{{ product.description|truncatechars:100 }}</p>
+                    <div class="d-flex justify-content-between align-items-center mt-3">
+                        <span class="price">₹{{ product.price }} / {{ product.unit }}</span>
+                        <a href="{% url 'product_detail' product.slug %}" class="btn btn-outline-primary">Details</a>
+                    </div>
+                </div>
+                <div class="card-footer bg-white border-top-0">
+                    <form action="{% url 'cart_add' product.id %}" method="post" class="d-grid">
+                        {% csrf_token %}
+                        <input type="hidden" name="quantity" value="1">
+                        <input type="hidden" name="override" value="False">
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart me-2"></i>Add to Cart
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <div class="col-12 text-center py-5">
+            <h3>No products available</h3>
+            <p>We're currently restocking. Please check back soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %} 
